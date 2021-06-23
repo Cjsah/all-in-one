@@ -36,7 +36,8 @@ public class AllInOneMod implements ModInitializer {
         return ((IStateGetter)server).getCppStateOperate();
     }
 
-    public static void sendGlobalMessage(ServerCommandSource source, String text) {
+    public static void sendGlobalMessage(CommandContext<ServerCommandSource> context, String text) {
+        ServerCommandSource source = context.getSource();
         if (source.getEntity() != null) {
             String name = source.getEntity().getEntityName();
             text = name + " " + text.substring(0, 1).toLowerCase() + text.substring(1);

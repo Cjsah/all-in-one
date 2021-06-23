@@ -104,56 +104,56 @@ public class StateOperate {
         return false;
     }
 
-    public void addPlan(ServerCommandSource source, String content) {
+    public void addPlan(CommandContext<ServerCommandSource> context, String content) {
         JsonObject plan = new JsonObject();
         plan.addProperty("content", content);
         plan.addProperty("completed", false);
         this.data.get("plans").getAsJsonArray().add(plan);
         this.runUpdateListeners();
-        AllInOneMod.sendGlobalMessage(source, "Created a plan: " + content);
+        AllInOneMod.sendGlobalMessage(context, "Created a plan: " + content);
     }
 
-    public void removePlan(ServerCommandSource source, int index) {
+    public void removePlan(CommandContext<ServerCommandSource> context, int index) {
         this.data.get("plans").getAsJsonArray().remove(index);
         this.runUpdateListeners();
-        AllInOneMod.sendGlobalMessage(source, "Removed plan " + index);
+        AllInOneMod.sendGlobalMessage(context, "Removed plan " + index);
     }
 
-    public void modifyPlan(ServerCommandSource source, int index, String content) throws CommandSyntaxException {
+    public void modifyPlan(CommandContext<ServerCommandSource> context, int index, String content) throws CommandSyntaxException {
         JsonArray plans = this.data.get("plans").getAsJsonArray();
         if (plans.size() <= index) throw INDEX_TOO_SMALL.create(plans.size(), index);
         plans.get(index).getAsJsonObject().addProperty("content", content);
         this.runUpdateListeners();
-        AllInOneMod.sendGlobalMessage(source, "Modified plan " + index + " to " + content);
+        AllInOneMod.sendGlobalMessage(context, "Modified plan " + index + " to " + content);
     }
 
-    public void completePlan(ServerCommandSource source, int index, boolean complete) throws CommandSyntaxException {
+    public void completePlan(CommandContext<ServerCommandSource> context, int index, boolean complete) throws CommandSyntaxException {
         JsonArray plans = this.data.get("plans").getAsJsonArray();
         if (plans.size() <= index) throw INDEX_TOO_SMALL.create(plans.size(), index);
         plans.get(index).getAsJsonObject().addProperty("completed", complete);
         this.runUpdateListeners();
-        AllInOneMod.sendGlobalMessage(source,  (complete ? "Completed" : "Recovered") + " a plan " + index);
+        AllInOneMod.sendGlobalMessage(context,  (complete ? "Completed" : "Recovered") + " a plan " + index);
     }
 
-    public void listAllPlan(ServerCommandSource source) {
+    public void listAllPlan(CommandContext<ServerCommandSource> context) {
         JsonArray plans = this.data.get("plans").getAsJsonArray();
-        source.sendFeedback(new LiteralText("Total " + plans.size() + " plans:").formatted(Formatting.GOLD), false);
+        context.getSource().sendFeedback(new LiteralText("Total " + plans.size() + " plans:").formatted(Formatting.GOLD), false);
         for (int index = 0; index < plans.size(); index++) {
             JsonObject plan = plans.get(index).getAsJsonObject();
             MutableText text = new LiteralText(String.format(" - Index: %d, %s", index, plan.get("content").getAsString())).formatted(Formatting.GOLD);
             if (plan.get("completed").getAsBoolean()) text.formatted(Formatting.STRIKETHROUGH);
-            source.sendFeedback(text, false);
+            context.getSource().sendFeedback(text, false);
         }
     }
 
-    public void listPlan(ServerCommandSource source, boolean completed) {
+    public void listPlan(CommandContext<ServerCommandSource> context, boolean completed) {
         JsonArray plans = this.data.get("plans").getAsJsonArray();
-        source.sendFeedback(new LiteralText("Total " + (completed ? "completed" : "unfinished") + " plans:").formatted(Formatting.GOLD), false);
+        context.getSource().sendFeedback(new LiteralText("Total " + (completed ? "completed" : "unfinished") + " plans:").formatted(Formatting.GOLD), false);
         for (int index = 0; index < plans.size(); index++) {
             JsonObject plan = plans.get(index).getAsJsonObject();
             if (plan.get("completed").getAsBoolean() == completed) {
                 MutableText text = new LiteralText(String.format(" - Index: %d, %s", index, plan.get("content").getAsString())).formatted(Formatting.GOLD);
-                source.sendFeedback(text, false);
+                context.getSource().sendFeedback(text, false);
             }
         }
 

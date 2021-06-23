@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "allinone",
+  "version": "${version}",
+
+  "name": "All in one Mod",
+  "description": "Add some mods to one mod!",
+  "authors": [
+    "Cjsah"
+  ],
+  "contact": {
+    "homepage": "https://www.cjsah.net"
+  },
+
+  "license": "GPAL-3.0",
+  "icon": "assets/allinone/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.cjsah.allinone.AllInOneMod"
+    ]
+  },
+  "mixins": [
+    "allinone.mixins.json"
+  ],
+
+  "accessWidener" : "allinone.accesswidener",
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.17.x"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

@@ -27,7 +27,6 @@ public class State extends PersistentState {
         NbtList plans = new NbtList();
         for (JsonElement plan : this.data.get("plans").getAsJsonArray()) {
             NbtCompound compound = new NbtCompound();
-            compound.putInt("index", plan.getAsJsonObject().get("index").getAsInt());
             compound.putString("content", plan.getAsJsonObject().get("content").getAsString());
             compound.putBoolean("completed", plan.getAsJsonObject().get("completed").getAsBoolean());
             plans.add(compound);
@@ -41,12 +40,11 @@ public class State extends PersistentState {
         for (NbtElement player : nbt.getList("players", 8)) {
             this.data.get("players").getAsJsonArray().add(player.asString());
         }
-        for (NbtElement plan : nbt.getList("players", 10)) {
+        for (NbtElement plan : nbt.getList("plans", 10)) {
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("index", ((NbtCompound)plan).getInt("index"));
             jsonObject.addProperty("content", ((NbtCompound)plan).getString("content"));
             jsonObject.addProperty("completed", ((NbtCompound)plan).getBoolean("completed"));
-            this.data.get("players").getAsJsonArray().add(jsonObject);
+            this.data.get("plans").getAsJsonArray().add(jsonObject);
         }
     }
 }

@@ -7,7 +7,6 @@
     ],
     "plans": [
         {
-            "index": 1,
             "content": "blabla",
             "completed": true
         }

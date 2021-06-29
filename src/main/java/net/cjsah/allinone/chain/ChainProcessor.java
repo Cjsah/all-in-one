@@ -19,7 +19,14 @@ import java.util.stream.Collectors;
 
 public class ChainProcessor extends Thread {
     private static final List<BlockPos> OFFSETS = BlockPos.stream(-1, -1, -1, 1, 1, 1).map(BlockPos::toImmutable).filter(pos -> !BlockPos.ORIGIN.equals(pos)).collect(Collectors.toList());
-    private static final int SIZE = 32;
+    /**
+     * 范围
+     */
+    public static final int SIZE = 32;
+    /**
+     * 最大连锁数量
+     */
+    public static final int MAX = 800;
     private final List<BlockPos> mines = Lists.newArrayList();
     private final List<ItemStack> drops = Lists.newArrayList();
     private final World world;
@@ -27,18 +34,24 @@ public class ChainProcessor extends Thread {
     private final ItemStack tool;
     private final BlockPos pos;
     private final Block block;
-    private int max = 800;
+    private int max;
 
     public ChainProcessor(World world, PlayerEntity player, BlockPos pos, Block block) {
+        this(world, player, pos, block, MAX);
+    }
+
+    public ChainProcessor(World world, PlayerEntity player, BlockPos pos, Block block, int max) {
         super("Chain Processor");
         this.world = world;
         this.player = player;
         this.tool = player.getMainHandStack();
         this.pos = pos;
         this.block = block;
+        this.max = max;
     }
 
     @Override
+    @SuppressWarnings("ConstantConditions")
     public void run() {
         BlockPos blockPos = this.pos;
         do {

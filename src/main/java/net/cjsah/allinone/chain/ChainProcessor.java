@@ -78,7 +78,7 @@ public class ChainProcessor extends Thread {
             }
         }while (!this.mines.isEmpty() && (!this.tool.isDamageable() || this.tool.getDamage() + 1 < this.tool.getMaxDamage()) && this.max > 0);
 
-        this.dropItems();
+        if (!this.player.isCreative()) this.dropItems();
     }
 
     private boolean contains(BlockPos target) {

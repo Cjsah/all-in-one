@@ -73,8 +73,7 @@ public class ChainProcessor extends Thread {
             }catch (IndexOutOfBoundsException ignore) {}
             for (BlockPos offset : OFFSETS) {
                 BlockPos targetPos = blockPos.add(offset);
-                if (this.world.getBlockState(targetPos).getBlock() == this.block && !this.contains(targetPos) && this.inDistance(targetPos) && targetPos.getY() >=5)
-                    this.mines.add(targetPos);
+                if (this.canChain(targetPos)) this.mines.add(targetPos);
             }
         }while (!this.mines.isEmpty() && (!this.tool.isDamageable() || this.tool.getDamage() + 1 < this.tool.getMaxDamage()) && this.max > 0);
 
@@ -83,6 +82,11 @@ public class ChainProcessor extends Thread {
 
     private boolean contains(BlockPos target) {
         return this.mines.stream().anyMatch(pos -> pos.getX() == target.getX() && pos.getY() == target.getY() && pos.getZ() == target.getZ());
+    }
+
+    private boolean canChain(BlockPos target) {
+        BlockState state = this.world.getBlockState(target);
+        return state.getBlock() == this.block && !this.contains(target) && this.inDistance(target) && target.getY() >=5 && this.player.canHarvest(state);
     }
 
     private boolean inDistance(BlockPos target) {

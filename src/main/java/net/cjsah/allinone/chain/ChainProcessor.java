@@ -22,11 +22,11 @@ public class ChainProcessor extends Thread {
     /**
      * 范围
      */
-    public static final int SIZE = 32;
+    public static int SIZE = 32;
     /**
      * 最大连锁数量
      */
-    public static final int MAX = 800;
+    public static int MAX = 800;
     private final List<BlockPos> mines = Lists.newArrayList();
     private final List<ItemStack> drops = Lists.newArrayList();
     private final World world;

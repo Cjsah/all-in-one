@@ -1,6 +1,7 @@
 package net.cjsah.allinone.chain;
 
 import com.mojang.brigadier.Command;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import net.cjsah.allinone.player.IPlayerState;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.server.command.CommandManager;
@@ -21,7 +22,10 @@ public class ChainCommand {
                     if (player != null) ((IPlayerState)player).setChaining(false);
                     context.getSource().sendFeedback(new LiteralText("You stopped chain block.").formatted(Formatting.GREEN), false);
                     return Command.SINGLE_SUCCESS;
-                }))
+                })).then(CommandManager.literal("max").then(CommandManager.argument("max", IntegerArgumentType.integer(0)).executes(context -> {
+                    ChainProcessor.MAX = IntegerArgumentType.getInteger(context, "max");
+                    return Command.SINGLE_SUCCESS;
+                })))
         )));
     }
 }
